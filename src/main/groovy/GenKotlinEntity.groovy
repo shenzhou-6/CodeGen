@@ -32,7 +32,7 @@ new File(dir + 'Entity.kt').withPrintWriter { out ->
     while (tables.next()) {
         def tableName = tables.getString("TABLE_NAME")
         def entityName = camel(tableName, true)
-        out.println "data class $entityName ("
+        out.println "class $entityName ("
         def primaryKey = metaData.getPrimaryKeys(null, null, tableName)
         def primaryKeyName = null
         while (primaryKey.next()) primaryKeyName = primaryKey.getString("COLUMN_NAME")
