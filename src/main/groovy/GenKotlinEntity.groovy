@@ -55,10 +55,10 @@ new File(dir + 'Entity.kt').withPrintWriter { out ->
             colunm = colunm + "? = null"
             nextColumn = columns.next()
             if (nextColumn){
-                colunm = colunm + ","
+                colunm = colunm
             }
             if (remark.size()>0) colunm = colunm + " //$remark"
-            if (primaryKeyName.equals(entityColumnName)){
+            if (primaryKeyName == entityColumnName){
                 out.println "@Id"
             }
             out.println colunm
