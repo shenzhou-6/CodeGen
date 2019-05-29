@@ -8,7 +8,7 @@ while (tables.next()) {
     def tableName = tables.getString("TABLE_NAME")
     def entityName = Utils.camel(tableName, true)
     new File(dir + entityName+".java").withPrintWriter { out ->
-        out.println "package $packageName"
+        out.println "package $packageName;"
         out.println "import java.time.LocalDateTime;"
         out.println "import java.time.LocalTime;"
         out.println "import java.time.LocalDate;"
