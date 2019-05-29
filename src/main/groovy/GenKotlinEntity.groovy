@@ -1,27 +1,13 @@
 import groovy.sql.Sql
 
-config = [
-        'url'            : 'jdbc:mysql://localhost:3306/diabetes',
-        'user'           : 'root',
-        'password'       : '123456',
-        'driverClassName': 'com.mysql.jdbc.Driver'
-]
-def dir = "/home/weixing/Desktop/"
-def packageName = "cc.shallow.entity"
+import static Config.*
 
-def metaData = Sql.newInstance(config).connection.metaData
+
+
+def metaData = Sql.newInstance(databaseConfig).connection.metaData
 
 def tables = metaData.getTables(null, null, "", null)
 
-
-def typeMap = ["CHAR"    : "String", "VARCHAR": "String", "TEXT": "String","MEDIUMTEXT":"String",
-               "TINYINT" : "Int", "SMALLINT": "Int", "MEDIUMINT": "Int", "INT": "Int","INT UNSIGNED":"Int",
-               "BIGINT"  : "Long",
-               "FLOAT"   : "Float", "DOUBLE": "Double", "DATE": "LocalDate",
-               "BIT"     : "Boolean",
-               "DATETIME": "LocalDateTime", "TIMESTAMP": "LocalDateTime",
-               "TIME"    : "LocalTime"
-]
 
 new File(dir + 'Entity.kt').withPrintWriter { out ->
     out.println "package $packageName"
@@ -34,7 +20,7 @@ new File(dir + 'Entity.kt').withPrintWriter { out ->
     out.println ""
     while (tables.next()) {
         def tableName = tables.getString("TABLE_NAME")
-        def entityName = camel(tableName, true)
+        def entityName = Utils.camel(tableName, true)
         out.println "@Entity"
         out.println "@Table(name=\"$tableName\")"
         out.println "class $entityName {"
@@ -48,8 +34,8 @@ new File(dir + 'Entity.kt').withPrintWriter { out ->
             def remark = columns.getString("REMARKS")
             def dataType = columns.getString("TYPE_NAME")
             //def nullable = columns.getString("NULLABLE")
-            def entityColumnName = camel(columnName, false)
-            def colunmType = typeMap[dataType]
+            def entityColumnName = Utils.camel(columnName, false)
+            def colunmType = kotlinTypeMap[dataType]
             def colunm = "var $entityColumnName:$colunmType"
             //if (nullable == "1") colunm = colunm + "?"
             colunm = colunm + "? = null"
@@ -66,16 +52,4 @@ new File(dir + 'Entity.kt').withPrintWriter { out ->
         out.println "}"
         out.println ""
     }
-}
-
-def camel(name, firstUp) {
-    if (firstUp) name = name.replace(name[0], name[0].toUpperCase())
-    if (name.contains("_")) {
-        index = name.indexOf("_")
-        while (index != -1) {
-            name = name.replace(name[index..index + 1], name[index + 1].toUpperCase())
-            index = name.indexOf("_")
-        }
-    }
-    return name
 }
