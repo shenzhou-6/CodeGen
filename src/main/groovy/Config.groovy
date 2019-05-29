@@ -4,9 +4,9 @@ class Config {
      * 数据库配置
      */
     static def databaseConfig = [
-            'url'            : 'jdbc:mysql://rm-bp1p9481wlgsa4h9uno.mysql.rds.aliyuncs.com:3306/diabetes_test',
-            'user'           : 'phoebusmed_dev',
-            'password'       : 'YktVbBYIDfMMQT6Ih2xDNR3ZHBgU!I',
+            'url'            : 'jdbc:mysql://127.0.0.1/demo',
+            'user'           : 'root',
+            'password'       : '123456',
             'driverClassName': 'com.mysql.jdbc.Driver'
     ]
 
