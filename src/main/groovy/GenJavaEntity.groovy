@@ -10,8 +10,6 @@ while (tables.next()) {
     new File(dir + entityName+".java").withPrintWriter { out ->
         out.println "package $packageName;"
         out.println "import java.time.LocalDateTime;"
-        out.println "import java.time.LocalTime;"
-        out.println "import java.time.LocalDate;"
         out.println "import javax.persistence.Entity;"
         out.println "import javax.persistence.Id;"
         out.println "import javax.persistence.Table;"
@@ -24,7 +22,7 @@ while (tables.next()) {
         out.println "@Data"
         out.println "@NoArgsConstructor"
         out.println "@AllArgsConstructor"
-        out.println "class $entityName {"
+        out.println "public class $entityName {"
         out.println ""
         def primaryKey = metaData.getPrimaryKeys(null, null, tableName)
         def primaryKeyName = null
@@ -32,14 +30,13 @@ while (tables.next()) {
         def columns = metaData.getColumns(null, null, tableName, null)
         def nextColumn = columns.next()
         while (nextColumn) {
-            out.println ""
             def columnName = columns.getString("COLUMN_NAME")
             def remark = columns.getString("REMARKS")
             def dataType = columns.getString("TYPE_NAME")
             //def nullable = columns.getString("NULLABLE")
             def entityColumnName = Utils.camel(columnName, false)
             def colunmType = javaTypeMap[dataType]
-            def colunm = "    $colunmType $entityColumnName;"
+            def colunm = "    private $colunmType $entityColumnName;"
             nextColumn = columns.next()
             if (nextColumn) {
                 colunm = colunm
@@ -50,7 +47,6 @@ while (tables.next()) {
             }
             out.println colunm
         }
-        out.println ""
         out.println "}"
         out.println ""
     }
